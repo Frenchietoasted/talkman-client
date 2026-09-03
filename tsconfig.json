@@ -1,0 +1,3 @@
+{
+  "extends": "@talkman/config/tsconfig.base.json"
+}
