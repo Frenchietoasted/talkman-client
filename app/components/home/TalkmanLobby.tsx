@@ -25,46 +25,42 @@ const EDITORS: { id: Editor; label: string }[] = [
 function EditorIcon({ id }: { id: Editor }) {
   if (id === "vscode") {
     return (
-      <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true">
-        <rect x="3" y="3" width="12" height="12" fill="#f25a5a" />
-        <rect x="17" y="3" width="12" height="12" fill="#3bd671" />
-        <rect x="3" y="17" width="12" height="12" fill="#3b7bf2" />
-        <rect x="17" y="17" width="12" height="12" fill="#f2c53b" />
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+        {/* Official Visual Studio Code Vector Logo */}
+        <path
+          d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z"
+          fill="#007ACC"
+        />
       </svg>
     );
   }
   if (id === "eclipse") {
     return (
       <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true">
-        <circle cx="16" cy="16" r="13" fill="none" stroke="#5b4fc4" strokeWidth="3" />
-        <circle cx="16" cy="16" r="13" fill="none" stroke="#5b4fc4" strokeWidth="3"
-          strokeDasharray="46 100" transform="rotate(-90 16 16)" />
+        <circle cx="16" cy="16" r="14" fill="#2c2255" />
+        <circle cx="16" cy="16" r="12" fill="none" stroke="#5b4fc4" strokeWidth="2.5" />
+        <path d="M8 16a8 8 0 0 0 16 0" stroke="#f8981d" strokeWidth="3" fill="none" />
+        <circle cx="16" cy="16" r="3" fill="#ffffff" />
       </svg>
     );
   }
   if (id === "intellij") {
     return (
       <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true">
-        <rect x="3" y="3" width="26" height="26" rx="4" fill="#000" />
-        <path d="M9 9h4v14H9zM17 9h6v3h-6zM17 14h6v3h-6zM17 19h6v3h-6z" fill="#8bd44d" />
+        <rect x="3" y="3" width="26" height="26" rx="5" fill="#000000" />
+        <path d="M7 23h8v2.5H7z" fill="#ffffff" />
+        <path d="M7 7.5h4v13H7z" fill="#fe2857" />
+        <path d="M14 7.5h11v3H14zM14 12.5h8v3h-8zM14 17.5h11v3H14z" fill="#00f1ff" />
       </svg>
     );
   }
   return (
     <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true">
       {/* Code::Blocks 4 colorful 3D blocks */}
-      {/* Top Left - Red */}
       <rect x="3" y="3" width="11" height="11" rx="2" fill="#e03131" />
-      <rect x="5" y="5" width="7" height="3" fill="#ff8787" opacity="0.6" />
-      {/* Top Right - Green */}
       <rect x="18" y="3" width="11" height="11" rx="2" fill="#2f9e44" />
-      <rect x="20" y="5" width="7" height="3" fill="#69db7c" opacity="0.6" />
-      {/* Bottom Left - Yellow */}
       <rect x="3" y="18" width="11" height="11" rx="2" fill="#f59f00" />
-      <rect x="5" y="20" width="7" height="3" fill="#ffe066" opacity="0.6" />
-      {/* Bottom Right - Magenta / Purple */}
       <rect x="18" y="18" width="11" height="11" rx="2" fill="#9c36b5" />
-      <rect x="20" y="20" width="7" height="3" fill="#e599f7" opacity="0.6" />
     </svg>
   );
 }
@@ -88,36 +84,40 @@ export default function TalkmanLobby() {
     <div className={`talkman-lobby ${isDark ? "is-dark" : "is-light"}`}>
       <style>{`
         .talkman-lobby {
-          --bg: #0c2036;
-          --bg-soft: #14304e;
-          --panel: #17385a;
-          --panel-line: rgba(255,255,255,0.08);
-          --text: #eef4fb;
-          --text-dim: #9db2c9;
-          --accent: #ffb648;
-          --accent-ink: #3a2400;
+          --bg: #0a192f;
+          --bg-soft: #112240;
+          --panel: #172a46;
+          --panel-line: #233554;
+          --text: #f8fafc;
+          --text-dim: #94a3b8;
+          --accent: #facc15;
+          --accent-ink: #0f172a;
+          --blue-title: #38bdf8;
+          --yellow-title: #facc15;
           min-height: 100vh;
           width: 100%;
           display: flex;
           align-items: center;
           justify-content: center;
           padding: 48px 20px;
-          background: radial-gradient(120% 90% at 50% -10%, #163a5e 0%, var(--bg) 55%, #081527 100%);
+          background: var(--bg);
           font-family: "Space Grotesk", "Segoe UI", system-ui, -apple-system, sans-serif;
           color: var(--text);
-          transition: background 0.4s ease;
+          transition: background 0.3s ease;
           box-sizing: border-box;
         }
         .talkman-lobby.is-light {
-          --bg: #eef3f9;
+          --bg: #e8f0fe;
           --bg-soft: #ffffff;
           --panel: #ffffff;
-          --panel-line: rgba(15,35,60,0.08);
-          --text: #10263f;
-          --text-dim: #5c7690;
-          --accent: #ff9d2e;
-          --accent-ink: #2a1600;
-          background: radial-gradient(120% 90% at 50% -10%, #ffffff 0%, var(--bg) 60%, #dbe6f2 100%);
+          --panel-line: #cbd5e1;
+          --text: #0f172a;
+          --text-dim: #64748b;
+          --accent: #eab308;
+          --accent-ink: #0f172a;
+          --blue-title: #2563eb;
+          --yellow-title: #ca8a04;
+          background: var(--bg);
         }
         .talkman-lobby * { box-sizing: border-box; }
 
@@ -132,19 +132,24 @@ export default function TalkmanLobby() {
 
         .tl-wordmark {
           display: flex;
-          align-items: baseline;
-          gap: 8px;
-          margin-bottom: -6px;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: -4px;
         }
-        .tl-wordmark span:first-child {
-          font-size: 26px;
-          font-weight: 700;
-          letter-spacing: -0.02em;
+        .tl-title {
+          font-size: 44px;
+          font-weight: 800;
+          letter-spacing: -0.03em;
+          display: inline-flex;
+          align-items: center;
+          line-height: 1;
+          user-select: none;
         }
-        .tl-wordmark span:last-child {
-          font-size: 12px;
-          color: var(--text-dim);
-          font-family: "JetBrains Mono", ui-monospace, monospace;
+        .tl-title-blue {
+          color: var(--blue-title);
+        }
+        .tl-title-yellow {
+          color: var(--yellow-title);
         }
 
         .tl-section-label {
@@ -173,10 +178,12 @@ export default function TalkmanLobby() {
           justify-content: center;
           cursor: pointer;
           background: transparent;
+          color: var(--text);
           transition: background 0.2s ease, transform 0.15s ease;
         }
         .tl-mode button.active {
           background: var(--accent);
+          color: var(--accent-ink);
           transform: scale(1.04);
         }
         .tl-mode button:focus-visible {
@@ -289,7 +296,10 @@ export default function TalkmanLobby() {
 
       <div className="tl-card">
         <div className="tl-wordmark">
-          <span>talkman</span>
+          <span className="tl-title">
+            <span className="tl-title-blue">talk</span>
+            <span className="tl-title-yellow">man</span>
+          </span>
         </div>
 
         <div className="tl-section-label">Mode?</div>
