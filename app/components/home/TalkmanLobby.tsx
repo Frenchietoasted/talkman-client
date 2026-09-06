@@ -1,4 +1,8 @@
+"use client";
+
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Sun, Moon } from "lucide-react";
 
 /**
  * Talkman — lobby screen
@@ -8,15 +12,14 @@ import React, { useState } from "react";
  * Self-contained: styles are scoped under .talkman-lobby, no Tailwind or
  * external CSS required. Drop this file into any React + TypeScript project.
  */
-
 type Mode = "light" | "dark";
-type Editor = "vscode" | "eclipse" | "intellij";
-type RoomAction = "create" | "join";
+type Editor = "vscode" | "eclipse" | "intellij" | "codeblocks";
 
 const EDITORS: { id: Editor; label: string }[] = [
   { id: "vscode", label: "VS Code" },
   { id: "eclipse", label: "Eclipse" },
   { id: "intellij", label: "IntelliJ" },
+  { id: "codeblocks", label: "Code::Blocks" },
 ];
 
 function EditorIcon({ id }: { id: Editor }) {
@@ -39,21 +42,47 @@ function EditorIcon({ id }: { id: Editor }) {
       </svg>
     );
   }
+  if (id === "intellij") {
+    return (
+      <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true">
+        <rect x="3" y="3" width="26" height="26" rx="4" fill="#000" />
+        <path d="M9 9h4v14H9zM17 9h6v3h-6zM17 14h6v3h-6zM17 19h6v3h-6z" fill="#8bd44d" />
+      </svg>
+    );
+  }
   return (
     <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true">
-      <rect x="3" y="3" width="26" height="26" rx="4" fill="#000" />
-      <path d="M9 9h4v14H9zM17 9h6v3h-6zM17 14h6v3h-6zM17 19h6v3h-6z" fill="#8bd44d" />
+      {/* Code::Blocks 4 colorful 3D blocks */}
+      {/* Top Left - Red */}
+      <rect x="3" y="3" width="11" height="11" rx="2" fill="#e03131" />
+      <rect x="5" y="5" width="7" height="3" fill="#ff8787" opacity="0.6" />
+      {/* Top Right - Green */}
+      <rect x="18" y="3" width="11" height="11" rx="2" fill="#2f9e44" />
+      <rect x="20" y="5" width="7" height="3" fill="#69db7c" opacity="0.6" />
+      {/* Bottom Left - Yellow */}
+      <rect x="3" y="18" width="11" height="11" rx="2" fill="#f59f00" />
+      <rect x="5" y="20" width="7" height="3" fill="#ffe066" opacity="0.6" />
+      {/* Bottom Right - Magenta / Purple */}
+      <rect x="18" y="18" width="11" height="11" rx="2" fill="#9c36b5" />
+      <rect x="20" y="20" width="7" height="3" fill="#e599f7" opacity="0.6" />
     </svg>
   );
 }
 
 export default function TalkmanLobby() {
+  const router = useRouter();
   const [mode, setMode] = useState<Mode>("dark");
   const [editor, setEditor] = useState<Editor>("vscode");
-  const [action, setAction] = useState<RoomAction>("create");
   const [roomCode, setRoomCode] = useState("");
 
   const isDark = mode === "dark";
+
+  const handleJoin = () => {
+    const targetCode = roomCode.trim().toLowerCase();
+    if (!targetCode) return;
+
+    router.push(`/room/${encodeURIComponent(targetCode)}?editor=${editor}&mode=${mode}`);
+  };
 
   return (
     <div className={`talkman-lobby ${isDark ? "is-dark" : "is-light"}`}>
@@ -202,36 +231,6 @@ export default function TalkmanLobby() {
           font-weight: 600;
           text-align: center;
         }
-        .tl-panel-title .tl-blank {
-          display: inline-block;
-          width: 46px;
-          border-bottom: 2px solid var(--accent);
-          margin-right: 6px;
-        }
-
-        .tl-toggle {
-          display: flex;
-          border-radius: 12px;
-          background: var(--bg-soft);
-          border: 1px solid var(--panel-line);
-          padding: 4px;
-        }
-        .tl-toggle button {
-          flex: 1;
-          padding: 10px 0;
-          border: none;
-          border-radius: 9px;
-          background: transparent;
-          color: var(--text-dim);
-          font-weight: 600;
-          font-size: 14px;
-          cursor: pointer;
-          transition: background 0.2s ease, color 0.2s ease;
-        }
-        .tl-toggle button.active {
-          background: var(--accent);
-          color: var(--accent-ink);
-        }
 
         .tl-code-input {
           width: 100%;
@@ -241,7 +240,7 @@ export default function TalkmanLobby() {
           color: var(--text);
           padding: 13px 14px;
           font-size: 15px;
-          letter-spacing: 0.12em;
+          letter-spacing: 0.08em;
           font-family: "JetBrains Mono", ui-monospace, monospace;
           text-transform: uppercase;
         }
@@ -274,6 +273,13 @@ export default function TalkmanLobby() {
           cursor: not-allowed;
         }
 
+        .tl-subhint {
+          font-size: 12px;
+          color: var(--text-dim);
+          text-align: center;
+          margin-top: -6px;
+        }
+
         .tl-hint {
           font-size: 12px;
           color: var(--text-dim);
@@ -284,7 +290,6 @@ export default function TalkmanLobby() {
       <div className="tl-card">
         <div className="tl-wordmark">
           <span>talkman</span>
-          <span>// pair by voice</span>
         </div>
 
         <div className="tl-section-label">Mode?</div>
@@ -296,7 +301,7 @@ export default function TalkmanLobby() {
             onClick={() => setMode("light")}
             title="Light mode"
           >
-            ☀️
+            <Sun size={17} strokeWidth={2} />
           </button>
           <button
             className={mode === "dark" ? "active" : ""}
@@ -305,7 +310,7 @@ export default function TalkmanLobby() {
             onClick={() => setMode("dark")}
             title="Dark mode"
           >
-            🌙
+            <Moon size={17} strokeWidth={2} />
           </button>
         </div>
 
@@ -326,49 +331,40 @@ export default function TalkmanLobby() {
 
         <div className="tl-panel">
           <div className="tl-panel-title">
-            <span className="tl-blank" /> a room
+            Join a room
           </div>
 
-          <div className="tl-toggle">
-            <button
-              className={action === "create" ? "active" : ""}
-              onClick={() => setAction("create")}
-            >
-              Create
-            </button>
-            <button
-              className={action === "join" ? "active" : ""}
-              onClick={() => setAction("join")}
-            >
-              Join
-            </button>
-          </div>
-
-          {action === "join" ? (
-            <input
-              className="tl-code-input"
-              placeholder="Room code"
-              value={roomCode}
-              maxLength={8}
-              onChange={(e) => setRoomCode(e.target.value)}
-            />
-          ) : (
-            <div className="tl-code-input" style={{ color: "var(--text-dim)" }}>
-              A code will be generated
-            </div>
-          )}
+          <input
+            className="tl-code-input"
+            placeholder="Room code"
+            value={roomCode}
+            maxLength={18}
+            onChange={(e) => setRoomCode(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && roomCode.trim().length > 0) {
+                handleJoin();
+              }
+            }}
+            autoFocus
+          />
 
           <button
             className="tl-go"
-            disabled={action === "join" && roomCode.trim().length === 0}
+            disabled={roomCode.trim().length === 0}
+            onClick={handleJoin}
           >
-            {action === "create" ? "Create room" : "Join room"}
+            Join room
           </button>
 
+          <div className="tl-subhint">
+            If the room doesn't exist, it will be created automatically.
+          </div>
+
           <div className="tl-hint">
-            {editor === "vscode" && "Opens the Talkman panel in VS Code once connected."}
-            {editor === "eclipse" && "Opens the Talkman view in Eclipse once connected."}
-            {editor === "intellij" && "Opens the Talkman tool window in IntelliJ once connected."}
+            {editor === "vscode" && "The Talkman panel opens in VS Code-like UI."}
+            {editor === "eclipse" && "The Talkman view opens in Eclipse-like UI."}
+            {editor === "intellij" && "The Talkman tool window opens in IntelliJ-like UI."}
+            {editor === "codeblocks" && "The Talkman workspace opens in Code::Blocks-like UI."}
           </div>
         </div>
       </div>
