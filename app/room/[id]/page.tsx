@@ -4,15 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import { Message, Mode, Editor, IDEProps } from "@/lib/types";
 import VSCodeView from "./components/VSCodeView";
-import EclipseView from "./components/EclipseView";
-import IntelliJView from "./components/IntelliJView";
-import CodeBlocksView from "./components/CodeBlocksView";
-import {
-  connectToRoom,
-  sendMessage,
-  getAllMessages,
-  getCookie,
-} from "@/lib/chat-services";
+import { getAllMessages, getCookie } from "@/lib/chat-services";
 
 export default function RoomPage() {
   const params = useParams();
@@ -31,24 +23,75 @@ export default function RoomPage() {
   const [loading, setLoading] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const wsRef = useRef<WebSocket | null>(null);
-
   const isDark = mode === "dark";
-  
+
+  function sendMessage(message: Message) {
+    if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
+      throw new Error("WebSocket is not connected");
+    }
+    wsRef.current.send(JSON.stringify(message));
+  }
+
   // Connect to room
   useEffect(() => {
-    let ws: WebSocket;
-
-    try {
-      ws = connectToRoom();
-      wsRef.current = ws;
-    } catch (error) {
-      console.error("Failed to connect to room:", error);
+    const serverUrl = process.env.NEXT_PUBLIC_WSS_SERVER_URL;
+    if (!serverUrl) {
+      console.error("WebSocket URL is not configured");
+      return;
     }
+
+    const socket = new WebSocket(serverUrl);
+    wsRef.current = socket;
+
+    socket.addEventListener("open", () => {
+      console.log("WebSocket connected");
+      setWsConnected(true);
+
+      const username = getCookie("username");
+      const roomIdCookie = getCookie("roomId");
+
+      if (!username || !roomIdCookie) {
+        console.error("Username or roomId cookie missing");
+        socket.close();
+        return;
+      }
+
+      socket.send(
+        JSON.stringify({
+          type: "join",
+          username,
+          roomId: roomIdCookie,
+        })
+      );
+      setWsConnected(true);
+    });
+
+    socket.addEventListener("message", (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        setMessages((prev) => [...prev, data]);
+      } catch (err) {
+        console.error("Failed to parse incoming message:", err);
+      }
+    });
+
+    socket.addEventListener("close", () => {
+      console.log("WebSocket disconnected");
+      setWsConnected(false);
+    });
+
+    socket.addEventListener("error", (err) => {
+      console.error("WebSocket error:", err);
+    });
+    
+    return () => {
+      socket.close();
+      wsRef.current = null;
+    };
   }, [roomId]);
 
   useEffect(() => {
     let cancelled = false;
-
     const poll = async () => {
       try {
         const oldMessages = await getAllMessages(roomId);
@@ -61,18 +104,17 @@ export default function RoomPage() {
       }
     };
 
-    poll(); // initial fetch
+    if (wsConnected)
+      poll();
 
     return () => {
-      cancelled = true;
-    };
-  }, [roomId]);
-
-  const handleSendMessage = (e?: React.SubmitEvent) => {
+      cancelled = false;
+    }
+  },[roomId,wsConnected])
+  const handleSendMessage = (e?: React.FormEvent<HTMLFormElement>) => {
     e?.preventDefault();
 
     const text = inputText.trim();
-
     if (!text) return;
 
     if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
@@ -92,27 +134,28 @@ export default function RoomPage() {
       minute: "2-digit",
     });
 
+    const username = getCookie("username");
+    if (!username) {
+      console.error("No username cookie set");
+      return;
+    }
+
     const newMsg: Message = {
       id: "msg-" + Date.now(),
-      sender: getCookie("username")!,
+      sender: username,
       text,
       timestamp: time,
       type: isCodeBlock ? "code" : "user",
     };
 
-    // Send through WebSocket
     sendMessage(newMsg);
-
     setInputText("");
   };
-  
+
   const copyRoomCode = () => {
     navigator.clipboard.writeText(roomId);
     setCopiedCode(true);
-
-    setTimeout(() => {
-      setCopiedCode(false);
-    }, 2000);
+    setTimeout(() => setCopiedCode(false), 2000);
   };
 
   const ideProps: IDEProps = {
@@ -132,11 +175,7 @@ export default function RoomPage() {
   };
 
   return (
-    <div
-      className={`ide-root ide-${editor} ${
-        isDark ? "theme-dark" : "theme-light"
-      }`}
-    >
+    <div className={`ide-root ide-${editor} ${isDark ? "theme-dark" : "theme-light"}`}>
       {!loading && (
         <div>
           <VSCodeView {...ideProps} />

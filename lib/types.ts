@@ -22,7 +22,7 @@ export interface IDEProps {
   messages: Message[];
   inputText: string;
   setInputText: (text: string) => void;
-  handleSendMessage: (e?: React.SubmitEvent) => void;
+  handleSendMessage: (e?: React.FormEvent<HTMLFormElement>) => void;
   messagesEndRef: React.RefObject<HTMLDivElement | null>;
   wsConnected: boolean;
   copiedCode: boolean;

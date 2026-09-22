@@ -3,9 +3,6 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Sun, Moon } from "lucide-react";
-import {
-  connectToRoom
-} from "@/lib/chat-services";
 
 function setCookie(name: string , value:string) {
     let cookieString = `${encodeURIComponent(name)}=${encodeURIComponent(value)}`;
