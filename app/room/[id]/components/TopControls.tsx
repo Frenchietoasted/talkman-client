@@ -3,11 +3,11 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { Sun, Moon } from "lucide-react";
-import { Editor, Mode } from "./types";
+import { Mode } from "../../../../lib/types";
 
 interface TopControlsProps {
-  currentTheme: Editor;
-  setEditor: (editor: Editor) => void;
+  currentTheme: string;
+  setEditor: (editor: string) => void;
   mode: Mode;
   setMode: (mode: Mode) => void;
 }

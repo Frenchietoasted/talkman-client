@@ -24,3 +24,442 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.talkman-lobby {
+  --bg: #0a192f;
+  --bg-soft: #112240;
+  --panel: #172a46;
+  --panel-line: #233554;
+  --text: #f8fafc;
+  --text-dim: #94a3b8;
+  --accent: #facc15;
+  --accent-ink: #0f172a;
+  --blue-title: #38bdf8;
+  --yellow-title: #facc15;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 20px;
+  background: var(--bg);
+  font-family: "Space Grotesk", "Segoe UI", system-ui, -apple-system, sans-serif;
+  color: var(--text);
+  transition: background 0.3s ease;
+  box-sizing: border-box;
+}
+.talkman-lobby.is-light {
+  --bg: #e8f0fe;
+  --bg-soft: #ffffff;
+  --panel: #ffffff;
+  --panel-line: #cbd5e1;
+  --text: #0f172a;
+  --text-dim: #64748b;
+  --accent: #eab308;
+  --accent-ink: #0f172a;
+  --blue-title: #2563eb;
+  --yellow-title: #ca8a04;
+  background: var(--bg);
+}
+.talkman-lobby * { box-sizing: border-box; }
+
+.tl-card {
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+.tl-wordmark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: -4px;
+}
+.tl-title {
+  font-size: 44px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  user-select: none;
+}
+.tl-title-blue {
+  color: var(--blue-title);
+}
+.tl-title-yellow {
+  color: var(--yellow-title);
+}
+
+.tl-section-label {
+  font-size: 13px;
+  color: var(--text-dim);
+  text-align: center;
+  margin-bottom: -14px;
+}
+
+/* mode toggle */
+.tl-mode {
+  display: flex;
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: 999px;
+  padding: 5px;
+  gap: 4px;
+}
+.tl-mode button {
+  width: 52px;
+  height: 40px;
+  border-radius: 999px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: transparent;
+  color: var(--text);
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+.tl-mode button.active {
+  background: var(--accent);
+  color: var(--accent-ink);
+  transform: scale(1.04);
+}
+.tl-mode button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* editor picker */
+.tl-editors {
+  display: flex;
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: 999px;
+  padding: 5px;
+  gap: 4px;
+}
+.tl-editors button {
+  width: 44px;
+  height: 40px;
+  border-radius: 999px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: transparent;
+  position: relative;
+  transition: background 0.2s ease;
+}
+.tl-editors button.active {
+  background: var(--bg-soft);
+  box-shadow: 0 0 0 1.5px var(--accent) inset;
+}
+.tl-editors button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.tl-panel {
+  width: 100%;
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: 22px;
+  padding: 22px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tl-panel-title {
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.tl-code-input {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--panel-line);
+  background: var(--bg-soft);
+  color: var(--text);
+  padding: 13px 14px;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  text-transform: uppercase;
+}
+.tl-code-input::placeholder {
+  font-family: "Space Grotesk", sans-serif;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--text-dim);
+}
+.tl-code-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.tl-go {
+  width: 100%;
+  padding: 13px 0;
+  border-radius: 12px;
+  border: none;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+}
+.tl-go:hover { filter: brightness(1.05); }
+.tl-go:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.tl-subhint {
+  font-size: 12px;
+  color: var(--text-dim);
+  text-align: center;
+  margin-top: -6px;
+}
+
+.tl-hint {
+  font-size: 12px;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+/* ========================================================
+   GLOBAL RESETS & IDE FONT DEFINITIONS
+======================================================== */
+.ide-root {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  user-select: none;
+  box-sizing: border-box;
+}
+.ide-root * { box-sizing: border-box; }
+
+/* ========================================================
+   THEME 1: VISUAL STUDIO CODE (VS CODE)
+======================================================== */
+.ide-vscode.theme-dark {
+  --ide-bg: #1e1e1e;
+  --ide-sidebar: #252526;
+  --ide-activity: #333333;
+  --ide-activity-fg: #ffffff;
+  --ide-activity-badge: #007acc;
+  --ide-status: #007acc;
+  --ide-status-fg: #ffffff;
+  --ide-titlebar: #323233;
+  --ide-tab-active: #1e1e1e;
+  --ide-tab-inactive: #2d2d2d;
+  --ide-tab-border: #252526;
+  --ide-border: #3c3c3c;
+  --ide-text: #cccccc;
+  --ide-text-dim: #858585;
+  --ide-text-bright: #ffffff;
+  --ide-input-bg: #3c3c3c;
+  --ide-input-border: #3c3c3c;
+  --ide-ctrl-bg: #1e1e1e;
+  --ide-accent: #007acc;
+  --ide-accent-hover: #0098ff;
+  --ide-gutter: #858585;
+  --ide-line-num: #5c6370;
+  --ide-code-bg: #141414;
+  --ide-self-msg: #094771;
+  --ide-other-msg: #262c33;
+}
+.ide-vscode.theme-light {
+  --ide-bg: #ffffff;
+  --ide-sidebar: #f3f3f3;
+  --ide-activity: #2c2c2c;
+  --ide-activity-fg: #ffffff;
+  --ide-activity-badge: #007acc;
+  --ide-status: #007acc;
+  --ide-status-fg: #ffffff;
+  --ide-titlebar: #dddddd;
+  --ide-tab-active: #ffffff;
+  --ide-tab-inactive: #ececec;
+  --ide-tab-border: #f3f3f3;
+  --ide-border: #e4e4e4;
+  --ide-text: #333333;
+  --ide-text-dim: #717171;
+  --ide-text-bright: #000000;
+  --ide-input-bg: #ffffff;
+  --ide-input-border: #cecece;
+  --ide-ctrl-bg: #ffffff;
+  --ide-accent: #007acc;
+  --ide-accent-hover: #005a9e;
+  --ide-gutter: #a6a6a6;
+  --ide-line-num: #888888;
+  --ide-code-bg: #f8f8f8;
+  --ide-self-msg: #dbeafe;
+  --ide-other-msg: #f1f5f9;
+}
+
+/* ========================================================
+   THEME 2: ECLIPSE IDE (Authentic Eclipse GTK / Dark Theme)
+======================================================== */
+.ide-eclipse.theme-dark {
+  --ide-bg: #1e1e1e;
+  --ide-sidebar: #252525;
+  --ide-activity: #303030;
+  --ide-activity-fg: #ffffff;
+  --ide-activity-badge: #3875d7;
+  --ide-titlebar: #333333;
+  --ide-tab-active: #1e1e1e;
+  --ide-tab-inactive: #2b2b2b;
+  --ide-border: #3c3c3c;
+  --ide-text: #cccccc;
+  --ide-text-dim: #888888;
+  --ide-text-bright: #ffffff;
+  --ide-input-bg: #1e1e1e;
+  --ide-input-border: #4a4a4a;
+  --ide-ctrl-bg: #2d2d2d;
+  --ide-accent: #3875d7;
+  --ide-accent-hover: #4e88e6;
+  --ide-status: #2c2c2c;
+  --ide-status-fg: #aaaaaa;
+  --ide-code-bg: #1e1e1e;
+  --ide-self-msg: #20354b;
+  --ide-other-msg: #272727;
+}
+.ide-eclipse.theme-light {
+  --ide-bg: #ffffff;
+  --ide-sidebar: #fafafa;
+  --ide-activity: #e8e8e8;
+  --ide-activity-fg: #24292e;
+  --ide-activity-badge: #0366d6;
+  --ide-titlebar: #e8e8e8;
+  --ide-tab-active: #ffffff;
+  --ide-tab-inactive: #e8e8e8;
+  --ide-border: #d0d7de;
+  --ide-text: #24292e;
+  --ide-text-dim: #57606a;
+  --ide-text-bright: #000000;
+  --ide-input-bg: #ffffff;
+  --ide-input-border: #d0d7de;
+  --ide-ctrl-bg: #ffffff;
+  --ide-accent: #0366d6;
+  --ide-accent-hover: #0969da;
+  --ide-status: #e8e8e8;
+  --ide-status-fg: #24292e;
+  --ide-code-bg: #ffffff;
+  --ide-self-msg: #ddf4ff;
+  --ide-other-msg: #f6f8fa;
+}
+
+/* ========================================================
+   THEME 3: INTELLIJ IDEA (JETBRAINS)
+======================================================== */
+.ide-intellij.theme-dark {
+  --ide-bg: #1e1f22;
+  --ide-sidebar: #2b2d30;
+  --ide-activity: #1e1f22;
+  --ide-activity-fg: #ffffff;
+  --ide-activity-badge: #3574f0;
+  --ide-titlebar: #2b2d30;
+  --ide-tab-active: #1e1f22;
+  --ide-tab-inactive: #2b2d30;
+  --ide-border: #393b40;
+  --ide-text: #bcbec4;
+  --ide-text-dim: #767a85;
+  --ide-text-bright: #ffffff;
+  --ide-input-bg: #1e1f22;
+  --ide-input-border: #4e5157;
+  --ide-ctrl-bg: #1e1f22;
+  --ide-accent: #3574f0;
+  --ide-accent-hover: #4e85f3;
+  --ide-status: #2b2d30;
+  --ide-status-fg: #868a91;
+  --ide-code-bg: #141517;
+  --ide-self-msg: #21324e;
+  --ide-other-msg: #282a2e;
+}
+.ide-intellij.theme-light {
+  --ide-bg: #ffffff;
+  --ide-sidebar: #f7f8fa;
+  --ide-activity: #ebecf0;
+  --ide-activity-fg: #27282e;
+  --ide-activity-badge: #3574f0;
+  --ide-titlebar: #ebecf0;
+  --ide-tab-active: #ffffff;
+  --ide-tab-inactive: #f7f8fa;
+  --ide-border: #dfe1e5;
+  --ide-text: #27282e;
+  --ide-text-dim: #818594;
+  --ide-text-bright: #000000;
+  --ide-input-bg: #ffffff;
+  --ide-input-border: #c4c7cc;
+  --ide-ctrl-bg: #ffffff;
+  --ide-accent: #3574f0;
+  --ide-accent-hover: #2663e0;
+  --ide-status: #f7f8fa;
+  --ide-status-fg: #6c707e;
+  --ide-code-bg: #f4f5f7;
+  --ide-self-msg: #e8f0fe;
+  --ide-other-msg: #f0f2f5;
+}
+
+/* ========================================================
+   THEME 4: CODE::BLOCKS (wxWidgets / wxAUI)
+======================================================== */
+.ide-codeblocks.theme-dark {
+  --ide-bg: #1e2227;
+  --ide-sidebar: #21252b;
+  --ide-activity: #282c34;
+  --ide-activity-fg: #ffffff;
+  --ide-activity-badge: #2f9e44;
+  --ide-titlebar: #24282f;
+  --ide-tab-active: #282c34;
+  --ide-tab-inactive: #1e2227;
+  --ide-border: #333842;
+  --ide-text: #abb2bf;
+  --ide-text-dim: #5c6370;
+  --ide-text-bright: #ffffff;
+  --ide-input-bg: #17191d;
+  --ide-input-border: #3e4451;
+  --ide-ctrl-bg: #21252b;
+  --ide-accent: #2f9e44;
+  --ide-accent-hover: #37b24d;
+  --ide-status: #1e2227;
+  --ide-status-fg: #abb2bf;
+  --ide-code-bg: #1e2227;
+  --ide-self-msg: #21324e;
+  --ide-other-msg: #282c34;
+}
+.ide-codeblocks.theme-light {
+  --ide-bg: #ffffff;
+  --ide-sidebar: #f5f5f5;
+  --ide-activity: #ebe9ed;
+  --ide-activity-fg: #333333;
+  --ide-activity-badge: #2f9e44;
+  --ide-titlebar: #e0dfdf;
+  --ide-tab-active: #ffffff;
+  --ide-tab-inactive: #ebe9ed;
+  --ide-border: #b8b8b8;
+  --ide-text: #24292e;
+  --ide-text-dim: #6a737d;
+  --ide-text-bright: #000000;
+  --ide-input-bg: #ffffff;
+  --ide-input-border: #b8b8b8;
+  --ide-ctrl-bg: #ebe9ed;
+  --ide-accent: #2f9e44;
+  --ide-accent-hover: #2b8a3e;
+  --ide-status: #ebe9ed;
+  --ide-status-fg: #24292e;
+  --ide-code-bg: #ffffff;
+  --ide-self-msg: #e8f5e9;
+  --ide-other-msg: #f8f9fa;
+}

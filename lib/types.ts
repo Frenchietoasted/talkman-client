@@ -5,24 +5,24 @@ export interface Message {
   sender: string;
   text: string;
   timestamp: string;
-  isSelf?: boolean;
-  type?: "user" | "system" | "code";
-  editor?: string;
+  type?: "user" | "system" | "code" | "error" | "message" | "join";
+  //editor?: string;
 }
 
 export type Mode = "light" | "dark";
-export type Editor = "vscode" | "eclipse" | "intellij" | "codeblocks";
+export type Editor = "vscode" | "eclipse" | "vim"
 
 export interface IDEProps {
+  //webSocket: WebSocket;
   roomId: string;
   mode: Mode;
   setMode: (mode: Mode) => void;
-  editor: Editor;
-  setEditor: (editor: Editor) => void;
+  editor: string;
+  setEditor: (editor: string) => void;
   messages: Message[];
   inputText: string;
   setInputText: (text: string) => void;
-  handleSendMessage: (e?: React.FormEvent) => void;
+  handleSendMessage: (e?: React.SubmitEvent) => void;
   messagesEndRef: React.RefObject<HTMLDivElement | null>;
   wsConnected: boolean;
   copiedCode: boolean;

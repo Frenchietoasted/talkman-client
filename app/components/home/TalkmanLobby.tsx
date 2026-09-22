@@ -3,15 +3,22 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Sun, Moon } from "lucide-react";
+import {
+  connectToRoom
+} from "@/lib/chat-services";
 
-/**
- * Talkman — lobby screen
- * A pairing screen for a voice-first pair-programming tool: pick your editor,
- * pick day/night, then create or join a room by code.
- *
- * Self-contained: styles are scoped under .talkman-lobby, no Tailwind or
- * external CSS required. Drop this file into any React + TypeScript project.
- */
+function setCookie(name: string , value:string) {
+    let cookieString = `${encodeURIComponent(name)}=${encodeURIComponent(value)}`;
+
+    const date = new Date();
+    date.setTime(date.getTime() + (6 * 60 * 60 * 1000)); // expires in 6 hours cause why not 
+    cookieString += `; expires=${date.toUTCString()}`;
+    
+    cookieString += "; path=/; SameSite=Lax; Secure";
+    
+    document.cookie = cookieString;
+}
+
 type Mode = "light" | "dark";
 type Editor = "vscode" | "eclipse" | "intellij" | "codeblocks";
 
@@ -69,230 +76,22 @@ export default function TalkmanLobby() {
   const router = useRouter();
   const [mode, setMode] = useState<Mode>("dark");
   const [editor, setEditor] = useState<Editor>("vscode");
+  const [username, setUsername] = useState("");
   const [roomCode, setRoomCode] = useState("");
 
   const isDark = mode === "dark";
 
   const handleJoin = () => {
     const targetCode = roomCode.trim().toLowerCase();
-    if (!targetCode) return;
-
+    const targetUsername = username.trim().toLowerCase();
+    if (!targetCode || !targetUsername) return;
+    setCookie("username", targetUsername)
+    setCookie("roomId", targetCode);
     router.push(`/room/${encodeURIComponent(targetCode)}?editor=${editor}&mode=${mode}`);
   };
 
   return (
     <div className={`talkman-lobby ${isDark ? "is-dark" : "is-light"}`}>
-      <style>{`
-        .talkman-lobby {
-          --bg: #0a192f;
-          --bg-soft: #112240;
-          --panel: #172a46;
-          --panel-line: #233554;
-          --text: #f8fafc;
-          --text-dim: #94a3b8;
-          --accent: #facc15;
-          --accent-ink: #0f172a;
-          --blue-title: #38bdf8;
-          --yellow-title: #facc15;
-          min-height: 100vh;
-          width: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 48px 20px;
-          background: var(--bg);
-          font-family: "Space Grotesk", "Segoe UI", system-ui, -apple-system, sans-serif;
-          color: var(--text);
-          transition: background 0.3s ease;
-          box-sizing: border-box;
-        }
-        .talkman-lobby.is-light {
-          --bg: #e8f0fe;
-          --bg-soft: #ffffff;
-          --panel: #ffffff;
-          --panel-line: #cbd5e1;
-          --text: #0f172a;
-          --text-dim: #64748b;
-          --accent: #eab308;
-          --accent-ink: #0f172a;
-          --blue-title: #2563eb;
-          --yellow-title: #ca8a04;
-          background: var(--bg);
-        }
-        .talkman-lobby * { box-sizing: border-box; }
-
-        .tl-card {
-          width: 100%;
-          max-width: 380px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 28px;
-        }
-
-        .tl-wordmark {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-bottom: -4px;
-        }
-        .tl-title {
-          font-size: 44px;
-          font-weight: 800;
-          letter-spacing: -0.03em;
-          display: inline-flex;
-          align-items: center;
-          line-height: 1;
-          user-select: none;
-        }
-        .tl-title-blue {
-          color: var(--blue-title);
-        }
-        .tl-title-yellow {
-          color: var(--yellow-title);
-        }
-
-        .tl-section-label {
-          font-size: 13px;
-          color: var(--text-dim);
-          text-align: center;
-          margin-bottom: -14px;
-        }
-
-        /* mode toggle */
-        .tl-mode {
-          display: flex;
-          background: var(--panel);
-          border: 1px solid var(--panel-line);
-          border-radius: 999px;
-          padding: 5px;
-          gap: 4px;
-        }
-        .tl-mode button {
-          width: 52px;
-          height: 40px;
-          border-radius: 999px;
-          border: none;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          background: transparent;
-          color: var(--text);
-          transition: background 0.2s ease, transform 0.15s ease;
-        }
-        .tl-mode button.active {
-          background: var(--accent);
-          color: var(--accent-ink);
-          transform: scale(1.04);
-        }
-        .tl-mode button:focus-visible {
-          outline: 2px solid var(--accent);
-          outline-offset: 2px;
-        }
-
-        /* editor picker */
-        .tl-editors {
-          display: flex;
-          background: var(--panel);
-          border: 1px solid var(--panel-line);
-          border-radius: 999px;
-          padding: 5px;
-          gap: 4px;
-        }
-        .tl-editors button {
-          width: 44px;
-          height: 40px;
-          border-radius: 999px;
-          border: none;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          background: transparent;
-          position: relative;
-          transition: background 0.2s ease;
-        }
-        .tl-editors button.active {
-          background: var(--bg-soft);
-          box-shadow: 0 0 0 1.5px var(--accent) inset;
-        }
-        .tl-editors button:focus-visible {
-          outline: 2px solid var(--accent);
-          outline-offset: 2px;
-        }
-
-        .tl-panel {
-          width: 100%;
-          background: var(--panel);
-          border: 1px solid var(--panel-line);
-          border-radius: 22px;
-          padding: 22px 20px 20px;
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
-        }
-
-        .tl-panel-title {
-          font-size: 18px;
-          font-weight: 600;
-          text-align: center;
-        }
-
-        .tl-code-input {
-          width: 100%;
-          border-radius: 12px;
-          border: 1px solid var(--panel-line);
-          background: var(--bg-soft);
-          color: var(--text);
-          padding: 13px 14px;
-          font-size: 15px;
-          letter-spacing: 0.08em;
-          font-family: "JetBrains Mono", ui-monospace, monospace;
-          text-transform: uppercase;
-        }
-        .tl-code-input::placeholder {
-          font-family: "Space Grotesk", sans-serif;
-          letter-spacing: normal;
-          text-transform: none;
-          color: var(--text-dim);
-        }
-        .tl-code-input:focus {
-          outline: none;
-          border-color: var(--accent);
-        }
-
-        .tl-go {
-          width: 100%;
-          padding: 13px 0;
-          border-radius: 12px;
-          border: none;
-          background: var(--accent);
-          color: var(--accent-ink);
-          font-weight: 700;
-          font-size: 15px;
-          cursor: pointer;
-          transition: filter 0.15s ease;
-        }
-        .tl-go:hover { filter: brightness(1.05); }
-        .tl-go:disabled {
-          opacity: 0.45;
-          cursor: not-allowed;
-        }
-
-        .tl-subhint {
-          font-size: 12px;
-          color: var(--text-dim);
-          text-align: center;
-          margin-top: -6px;
-        }
-
-        .tl-hint {
-          font-size: 12px;
-          color: var(--text-dim);
-          text-align: center;
-        }
-      `}</style>
 
       <div className="tl-card">
         <div className="tl-wordmark">
@@ -343,7 +142,16 @@ export default function TalkmanLobby() {
           <div className="tl-panel-title">
             Join a room
           </div>
-
+          
+          <input
+            className="tl-code-input"
+            placeholder="Username"
+            value={username}
+            maxLength={18}
+            onChange={(e) => setUsername(e.target.value)}
+            autoFocus
+          />
+          
           <input
             className="tl-code-input"
             placeholder="Room code"
@@ -367,14 +175,14 @@ export default function TalkmanLobby() {
           </button>
 
           <div className="tl-subhint">
-            If the room doesn't exist, it will be created automatically.
+            If the room doesn&apos;t exist, it will be created automatically.
           </div>
 
           <div className="tl-hint">
-            {editor === "vscode" && "The Talkman panel opens in VS Code-like UI."}
-            {editor === "eclipse" && "The Talkman view opens in Eclipse-like UI."}
-            {editor === "intellij" && "The Talkman tool window opens in IntelliJ-like UI."}
-            {editor === "codeblocks" && "The Talkman workspace opens in Code::Blocks-like UI."}
+            {editor === "vscode" && "VS Code Mode"}
+            {editor === "eclipse" && "Eclipse Mode."}
+            {editor === "intellij" && "IntelliJ Mode."}
+            {editor === "codeblocks" && "Code::Blocks Mode."}
           </div>
         </div>
       </div>

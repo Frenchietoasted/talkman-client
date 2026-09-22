@@ -23,7 +23,7 @@ import {
   Radio,
 } from "lucide-react";
 import TopControls from "./TopControls";
-import { IDEProps } from "./types";
+import { IDEProps } from "../../../../lib/types";
 
 export default function IntelliJView({
   roomId,
@@ -70,7 +70,7 @@ export default function IntelliJView({
       >
         {/* Left Controls */}
         <div style={{ display: "flex", alignItems: "center", gap: "10px", minWidth: "260px" }}>
-          <span style={{ fontSize: "14px", fontWeight: 700, color: "var(--ide-accent)" }}>// Talkman</span>
+          <span style={{ fontSize: "14px", fontWeight: 700, color: "var(--ide-accent)" }}>Talkman</span>
           <span style={{ fontWeight: 600 }}>room-{roomId}</span>
           <span style={{ color: "var(--ide-text-dim)" }}>[talkman-client]</span>
           <span style={{ color: "var(--ide-text-dim)", display: "inline-flex", alignItems: "center", gap: "4px" }}>
@@ -360,8 +360,8 @@ export default function IntelliJView({
                     }}
                   >
                     <div style={{ color: isDark ? "#7a7e85" : "#808080", fontSize: "12px", display: "flex", alignItems: "center", gap: "8px" }}>
-                      <span style={{ fontWeight: 600, color: msg.isSelf ? "var(--ide-accent)" : (isDark ? "#ffc66d" : "#9876aa") }}>
-                        // @{msg.sender}{msg.isSelf ? " (You)" : ""}:
+                      <span style={{ fontWeight: 600, color: msg.sender ? "var(--ide-accent)" : (isDark ? "#ffc66d" : "#9876aa") }}>
+                        @{msg.sender}:
                       </span>
                       <span style={{ opacity: 0.6, fontSize: "11px" }}>{msg.timestamp}</span>
                     </div>
@@ -373,7 +373,7 @@ export default function IntelliJView({
                         lineHeight: "1.4",
                         color: msg.type === "code"
                           ? "var(--ide-text-bright)"
-                          : msg.isSelf
+                          : msg.sender
                           ? (isDark ? "#6a8759" : "#008000")
                           : "var(--ide-text)",
                       }}

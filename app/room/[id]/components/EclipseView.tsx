@@ -33,7 +33,7 @@ import {
   Boxes,
 } from "lucide-react";
 import TopControls from "./TopControls";
-import { IDEProps } from "./types";
+import { IDEProps } from "../../../../lib/types";
 
 export default function EclipseView({
   roomId,
@@ -473,7 +473,7 @@ export default function EclipseView({
                           {["MainActivity.java", "NotesList.java", "NoteEdit.java"].map((file) => (
                             <div
                               key={file}
-                              onClick={() => setActiveFile(file as any)}
+                              onClick={() => setActiveFile(file as typeof activeFile)}
                               style={{
                                 display: "flex",
                                 alignItems: "center",
@@ -572,7 +572,7 @@ export default function EclipseView({
                 .map((file) => (
                   <div
                     key={file}
-                    onClick={() => setActiveFile(file as any)}
+                    onClick={() => setActiveFile(file as typeof activeFile)}
                     style={{
                       padding: "0 10px",
                       display: "flex",
@@ -681,8 +681,8 @@ export default function EclipseView({
                     }}
                   >
                     <div style={{ color: isDark ? "#6a8759" : "#3f7f5f", fontSize: "12px", display: "flex", alignItems: "center", gap: "8px" }}>
-                      <span style={{ fontWeight: 600, color: msg.isSelf ? "#3875d7" : (isDark ? "#ffc66d" : "#7f0055") }}>
-                        // @{msg.sender}{msg.isSelf ? " (You)" : ""}:
+                      <span style={{ fontWeight: 600, color: msg.sender ? "#3875d7" : (isDark ? "#ffc66d" : "#7f0055") }}>
+                        @{msg.sender}:
                       </span>
                       <span style={{ opacity: 0.6, fontSize: "11px" }}>{msg.timestamp}</span>
                     </div>
@@ -694,7 +694,7 @@ export default function EclipseView({
                         lineHeight: "1.4",
                         color: msg.type === "code"
                           ? (isDark ? "#ffffff" : "#000000")
-                          : msg.isSelf
+                          : msg.sender
                           ? (isDark ? "#98c379" : "#2e7d32")
                           : (isDark ? "#dfdfdf" : "#24292e"),
                       }}
@@ -871,7 +871,7 @@ export default function EclipseView({
             ].map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setEclipseBottomTab(tab.id as any)}
+                onClick={() => setEclipseBottomTab(tab.id as typeof eclipseBottomTab)}
                 style={{
                   padding: "0 10px",
                   background: eclipseBottomTab === tab.id ? (isDark ? "#1e1e1e" : "#ffffff") : "transparent",

@@ -26,7 +26,7 @@ import {
   Folder,
 } from "lucide-react";
 import TopControls from "./TopControls";
-import { IDEProps } from "./types";
+import { IDEProps } from "@/lib/types";
 
 export default function VSCodeView({
   roomId,
@@ -376,13 +376,13 @@ export default function VSCodeView({
                 <div><span style={{ color: "#c678dd", fontWeight: "bold" }}>import</span> &#123; <span style={{ color: "#e5c07b" }}>RoomSession</span> &#125; <span style={{ color: "#c678dd", fontWeight: "bold" }}>from</span> <span style={{ color: "#98c379" }}>"@talkman/pair"</span>;</div>
                 <div style={{ height: "19px" }}></div>
                 <div><span style={{ color: "#c678dd", fontWeight: "bold" }}>export default function</span> <span style={{ color: "#61afef" }}>RoomPage</span>() &#123;</div>
-                <div style={{ paddingLeft: "20px" }}><span style={{ color: "#c678dd", fontWeight: "bold" }}>const</span> roomId = <span style={{ color: "#98c379" }}>"#{roomId}"</span>;</div>
+                <div style={{ paddingLeft: "20px" }}><span style={{ color: "#c678dd", fontWeight: "bold" }}>const</span> roomId = <span style={{ color: "#98c379" }}>&quot;#{roomId}&quot;</span>;</div>
                 <div style={{ height: "19px" }}></div>
 
                 {/* Messages in Code Canvas */}
-                {messages.map((msg) => (
+                {messages.map((msg,index) => (
                   <div
-                    key={msg.id}
+                    key={index}
                     style={{
                       paddingLeft: "20px",
                       marginTop: "6px",
@@ -392,8 +392,8 @@ export default function VSCodeView({
                     }}
                   >
                     <div style={{ color: isDark ? "#6a9955" : "#008000", fontSize: "12px", display: "flex", alignItems: "center", gap: "8px" }}>
-                      <span style={{ fontWeight: 600, color: msg.isSelf ? (isDark ? "#4ec9b0" : "#0070c1") : (isDark ? "#e5c07b" : "#b26b00") }}>
-                        // @{msg.sender}{msg.isSelf ? " (You)" : ""}:
+                      <span style={{ fontWeight: 600, color: msg.sender ? (isDark ? "#4ec9b0" : "#0070c1") : (isDark ? "#e5c07b" : "#b26b00") }}>
+                        @{msg.sender}:
                       </span>
                       <span style={{ opacity: 0.6, fontSize: "11px" }}>{msg.timestamp}</span>
                     </div>
@@ -405,7 +405,7 @@ export default function VSCodeView({
                         lineHeight: "1.4",
                         color: msg.type === "code"
                           ? "var(--ide-text-bright)"
-                          : msg.isSelf
+                          : msg.sender
                           ? (isDark ? "#98c379" : "#2e7d32")
                           : "var(--ide-text)",
                       }}

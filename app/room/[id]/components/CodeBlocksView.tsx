@@ -39,7 +39,7 @@ import {
   Files,
 } from "lucide-react";
 import TopControls from "./TopControls";
-import { IDEProps } from "./types";
+import { IDEProps } from "../../../../lib/types";
 
 export default function CodeBlocksView({
   roomId,
@@ -1412,8 +1412,8 @@ export default function CodeBlocksView({
                           }}
                         >
                           <div style={{ color: isDark ? "#98c379" : "#22863a", fontSize: "12px", display: "flex", alignItems: "center", gap: "8px" }}>
-                            <span style={{ fontWeight: 600, color: msg.isSelf ? (isDark ? "#61afef" : "#0366d6") : (isDark ? "#e5c07b" : "#b26b00") }}>
-                              // @{msg.sender}{msg.isSelf ? " (You)" : ""}:
+                            <span style={{ fontWeight: 600, color: msg.sender ? (isDark ? "#61afef" : "#0366d6") : (isDark ? "#e5c07b" : "#b26b00") }}>
+                              @{msg.sender}:
                             </span>
                             <span style={{ opacity: 0.6, fontSize: "11px" }}>{msg.timestamp}</span>
                           </div>
@@ -1425,7 +1425,7 @@ export default function CodeBlocksView({
                               lineHeight: "1.4",
                               color: msg.type === "code"
                                 ? (isDark ? "#ffffff" : "#000000")
-                                : msg.isSelf
+                                : msg.sender
                                 ? (isDark ? "#98c379" : "#2e7d32")
                                 : (isDark ? "#abb2bf" : "#24292e"),
                             }}
@@ -1606,7 +1606,7 @@ export default function CodeBlocksView({
               ].map((tab) => (
                 <button
                   key={tab.id}
-                  onClick={() => setCodeblocksBottomTab(tab.id as any)}
+                  onClick={() => setCodeblocksBottomTab(tab.id as typeof codeblocksBottomTab)}
                   style={{
                     background: codeblocksBottomTab === tab.id ? (isDark ? "#21252b" : "#ffffff") : "transparent",
                     border:
