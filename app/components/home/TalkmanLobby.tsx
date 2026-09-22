@@ -84,7 +84,7 @@ export default function TalkmanLobby() {
     if (!targetCode || !targetUsername) return;
     setCookie("username", targetUsername)
     setCookie("roomId", targetCode);
-    router.push(`/room/${encodeURIComponent(targetCode)}?editor=${editor}&mode=${mode}`);
+    router.push(`/room/${encodeURIComponent(targetCode)}`);
   };
 
   return (
