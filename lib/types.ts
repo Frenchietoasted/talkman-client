@@ -4,9 +4,14 @@ export interface Message {
   id: string;
   sender: string;
   text: string;
-  timestamp: string;
+  timeStamp: string;
   type?: "user" | "system" | "code" | "error" | "message" | "join";
   //editor?: string;
+}
+
+export interface Notif {
+  sender: string;
+  text: string;
 }
 
 export type Mode = "light" | "dark";

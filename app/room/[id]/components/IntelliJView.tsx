@@ -363,7 +363,7 @@ export default function IntelliJView({
                       <span style={{ fontWeight: 600, color: msg.sender ? "var(--ide-accent)" : (isDark ? "#ffc66d" : "#9876aa") }}>
                         @{msg.sender}:
                       </span>
-                      <span style={{ opacity: 0.6, fontSize: "11px" }}>{msg.timestamp}</span>
+                      <span style={{ opacity: 0.6, fontSize: "11px" }}>{msg.timeStamp}</span>
                     </div>
                     <div
                       style={{

@@ -684,7 +684,7 @@ export default function EclipseView({
                       <span style={{ fontWeight: 600, color: msg.sender ? "#3875d7" : (isDark ? "#ffc66d" : "#7f0055") }}>
                         @{msg.sender}:
                       </span>
-                      <span style={{ opacity: 0.6, fontSize: "11px" }}>{msg.timestamp}</span>
+                      <span style={{ opacity: 0.6, fontSize: "11px" }}>{msg.timeStamp}</span>
                     </div>
                     <div
                       style={{

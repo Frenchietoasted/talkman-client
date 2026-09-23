@@ -753,7 +753,7 @@ export default function VSCodeView({
                         @{msg.sender}:
                       </span>
                       <span style={{ opacity: 0.6, fontSize: "11px" }}>
-                        {msg.timestamp}
+                        {msg.timeStamp}
                       </span>
                     </div>
                     <div

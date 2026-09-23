@@ -1415,7 +1415,7 @@ export default function CodeBlocksView({
                             <span style={{ fontWeight: 600, color: msg.sender ? (isDark ? "#61afef" : "#0366d6") : (isDark ? "#e5c07b" : "#b26b00") }}>
                               @{msg.sender}:
                             </span>
-                            <span style={{ opacity: 0.6, fontSize: "11px" }}>{msg.timestamp}</span>
+                            <span style={{ opacity: 0.6, fontSize: "11px" }}>{msg.timeStamp}</span>
                           </div>
                           <div
                             style={{

@@ -2,14 +2,52 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useSearchParams } from "next/navigation";
-import { Message, Mode, Editor, IDEProps } from "@/lib/types";
+import { Message, Notif, Mode, Editor, IDEProps } from "@/lib/types";
+import { ToastContainer, toast } from "react-toastify";
 import VSCodeView from "./components/VSCodeView";
 import { getAllMessages, getCookie } from "@/lib/chat-services";
 
 export default function RoomPage() {
   const params = useParams();
   const searchParams = useSearchParams();
-
+  const notify = (notif: Notif) => {
+    if (!("Notification" in window)) {
+      // Check if the browser supports notifications
+      alert("This browser does not support desktop notification");
+    } else if (Notification.permission === "granted") {
+      // Check whether notification permissions have already been granted;
+      // if so, create a notification
+      const notification = new Notification(notif.sender, {
+        body: notif.text,
+      });
+      setTimeout(() => {
+        notification.close();
+      }, 1500);
+      // …
+    } else if (Notification.permission !== "denied") {
+      // We need to ask the user for permission
+      Notification.requestPermission().then((permission) => {
+        // If the user accepts, let's create a notification
+        if (permission === "granted") {
+          const notification = new Notification(notif.text);
+          setTimeout(() => {
+            notification.close();
+          }, 6000);
+        }
+      });
+    }
+    const message = `${notif.sender}: ${notif.text}`;
+    toast.success(message, {
+      position: "bottom-right",
+      autoClose: 2000,
+      hideProgressBar: true,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+  };
   const roomId = (params?.id as string) || "unknown";
   const initialMode = (searchParams.get("mode") as Mode) || "dark";
   const initialEditor = (searchParams.get("editor") as Editor) || "vscode";
@@ -61,15 +99,28 @@ export default function RoomPage() {
           type: "join",
           username,
           roomId: roomIdCookie,
-        })
+        }),
       );
       setWsConnected(true);
+      notify({ sender: "system", text: `Joined room ${roomId}` });
     });
 
     socket.addEventListener("message", (event) => {
       try {
+        const username = getCookie("username");
         const data = JSON.parse(event.data);
         setMessages((prev) => [...prev, data]);
+        if (data.sender != username) {
+          const trimmedMessage =
+            data.text.length > 35
+              ? data.text.substring(0, 35) + "..."
+              : data.text;
+          const message = {
+            sender: data.sender,
+            text: trimmedMessage,
+          };
+          notify(message);
+        }
       } catch (err) {
         console.error("Failed to parse incoming message:", err);
       }
@@ -83,7 +134,7 @@ export default function RoomPage() {
     socket.addEventListener("error", (err) => {
       console.error("WebSocket error:", err);
     });
-    
+
     return () => {
       socket.close();
       wsRef.current = null;
@@ -104,13 +155,12 @@ export default function RoomPage() {
       }
     };
 
-    if (wsConnected)
-      poll();
+    if (wsConnected) poll();
 
     return () => {
       cancelled = false;
-    }
-  },[roomId,wsConnected])
+    };
+  }, [roomId, wsConnected]);
   const handleSendMessage = (e?: React.FormEvent<HTMLFormElement>) => {
     e?.preventDefault();
 
@@ -144,7 +194,7 @@ export default function RoomPage() {
       id: "msg-" + Date.now(),
       sender: username,
       text,
-      timestamp: time,
+      timeStamp: time,
       type: isCodeBlock ? "code" : "user",
     };
 
@@ -175,10 +225,24 @@ export default function RoomPage() {
   };
 
   return (
-    <div className={`ide-root ide-${editor} ${isDark ? "theme-dark" : "theme-light"}`}>
+    <div
+      className={`ide-root ide-${editor} ${isDark ? "theme-dark" : "theme-light"}`}
+    >
       {!loading && (
         <div>
           <VSCodeView {...ideProps} />
+          <ToastContainer
+            position="bottom-right"
+            autoClose={2000}
+            hideProgressBar={true}
+            newestOnTop={false}
+            closeOnClick={false}
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="colored"
+          />
         </div>
       )}
     </div>
