@@ -875,7 +875,9 @@ export default function EclipseView({
                 style={{
                   padding: "0 10px",
                   background: eclipseBottomTab === tab.id ? (isDark ? "#1e1e1e" : "#ffffff") : "transparent",
-                  border: eclipseBottomTab === tab.id ? (isDark ? "1px solid #3c3c3c" : "1px solid #d0d7de") : "1px solid transparent",
+                  borderTop: eclipseBottomTab === tab.id ? (isDark ? "1px solid #3c3c3c" : "1px solid #d0d7de") : "1px solid transparent",
+                  borderLeft: eclipseBottomTab === tab.id ? (isDark ? "1px solid #3c3c3c" : "1px solid #d0d7de") : "1px solid transparent",
+                  borderRight: eclipseBottomTab === tab.id ? (isDark ? "1px solid #3c3c3c" : "1px solid #d0d7de") : "1px solid transparent",
                   borderBottom: "none",
                   color: eclipseBottomTab === tab.id ? (isDark ? "#ffffff" : "#000000") : (isDark ? "#888888" : "#57606a"),
                   fontWeight: eclipseBottomTab === tab.id ? 600 : 400,

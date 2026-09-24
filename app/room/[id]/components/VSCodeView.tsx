@@ -92,58 +92,31 @@ export default function VSCodeView({
           flexShrink: 0,
         }}
       >
-        {/* Left Controls */}
+        {/* Left Controls: Authentic VS Code Menu Bar */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "10px",
-            minWidth: "260px",
+            gap: "4px",
           }}
         >
-          <div style={{ display: "flex", gap: "6px" }}>
+          {["File", "Edit", "Selection", "View", "Go", "Run", "Terminal", "Help"].map((item) => (
             <span
+              key={item}
               style={{
-                width: "11px",
-                height: "11px",
-                borderRadius: "50%",
-                background: "#ff5f56",
+                padding: "2px 7px",
+                color: "var(--ide-text-dim)",
+                borderRadius: "3px",
+                cursor: "pointer",
+                fontSize: "12px",
+                transition: "background 0.1s ease",
               }}
-            />
-            <span
-              style={{
-                width: "11px",
-                height: "11px",
-                borderRadius: "50%",
-                background: "#ffbd2e",
-              }}
-            />
-            <span
-              style={{
-                width: "11px",
-                height: "11px",
-                borderRadius: "50%",
-                background: "#27c93f",
-              }}
-            />
-          </div>
-          <div
-            style={{
-              display: "flex",
-              gap: "12px",
-              color: "var(--ide-text-dim)",
-              marginLeft: "6px",
-            }}
-          >
-            <span>File</span>
-            <span>Edit</span>
-            <span>Selection</span>
-            <span>View</span>
-            <span>Go</span>
-            <span>Run</span>
-            <span>Terminal</span>
-            <span>Help</span>
-          </div>
+              onMouseEnter={(e) => (e.currentTarget.style.background = "var(--ide-hover)")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+            >
+              {item}
+            </span>
+          ))}
         </div>
 
         {/* Center Command Search Bar */}
@@ -158,8 +131,11 @@ export default function VSCodeView({
             display: "flex",
             alignItems: "center",
             gap: "8px",
-            minWidth: "300px",
+            minWidth: "280px",
+            maxWidth: "460px",
+            flex: 1,
             justifyContent: "center",
+            margin: "0 16px",
           }}
         >
           <Search size={13} style={{ opacity: 0.7 }} />
@@ -194,43 +170,100 @@ export default function VSCodeView({
             style={{
               display: "flex",
               flexDirection: "column",
-              gap: "18px",
+              gap: "4px",
               alignItems: "center",
+              width: "100%",
             }}
           >
+            {/* Active Explorer */}
             <div
               title="Explorer"
               style={{
                 cursor: "pointer",
                 color: "var(--ide-activity-fg)",
                 display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                height: "38px",
+                borderLeft: "2px solid var(--ide-activity-badge)",
               }}
             >
-              <Files size={18} />
+              <Files size={19} />
             </div>
+
+            {/* Inactive Icons */}
             <div
               title="Search"
-              style={{ cursor: "pointer", opacity: 0.6, display: "flex" }}
+              style={{
+                cursor: "pointer",
+                color: "var(--ide-activity-dim)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                height: "38px",
+                borderLeft: "2px solid transparent",
+                transition: "color 0.15s ease",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--ide-activity-hover)")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--ide-activity-dim)")}
             >
-              <Search size={18} />
+              <Search size={19} />
             </div>
             <div
               title="Source Control"
-              style={{ cursor: "pointer", opacity: 0.6, display: "flex" }}
+              style={{
+                cursor: "pointer",
+                color: "var(--ide-activity-dim)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                height: "38px",
+                borderLeft: "2px solid transparent",
+                transition: "color 0.15s ease",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--ide-activity-hover)")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--ide-activity-dim)")}
             >
-              <GitBranch size={18} />
+              <GitBranch size={19} />
             </div>
             <div
               title="Run and Debug"
-              style={{ cursor: "pointer", opacity: 0.6, display: "flex" }}
+              style={{
+                cursor: "pointer",
+                color: "var(--ide-activity-dim)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                height: "38px",
+                borderLeft: "2px solid transparent",
+                transition: "color 0.15s ease",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--ide-activity-hover)")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--ide-activity-dim)")}
             >
-              <Play size={18} />
+              <Play size={19} />
             </div>
             <div
               title="Extensions"
-              style={{ cursor: "pointer", opacity: 0.6, display: "flex" }}
+              style={{
+                cursor: "pointer",
+                color: "var(--ide-activity-dim)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                height: "38px",
+                borderLeft: "2px solid transparent",
+                transition: "color 0.15s ease",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--ide-activity-hover)")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--ide-activity-dim)")}
             >
-              <LayoutGrid size={18} />
+              <LayoutGrid size={19} />
             </div>
             <div
               title="Talkman Pair Channel (Active)"
@@ -238,32 +271,61 @@ export default function VSCodeView({
                 cursor: "pointer",
                 color: "var(--ide-activity-badge)",
                 display: "flex",
-                borderLeft: "2px solid var(--ide-activity-badge)",
-                paddingLeft: "4px",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                height: "38px",
+                borderLeft: "2px solid transparent",
+                transition: "color 0.15s ease",
               }}
             >
-              <MessageSquare size={18} />
+              <MessageSquare size={19} />
             </div>
           </div>
           <div
             style={{
               display: "flex",
               flexDirection: "column",
-              gap: "16px",
+              gap: "4px",
               alignItems: "center",
+              width: "100%",
             }}
           >
             <div
               title="Accounts"
-              style={{ cursor: "pointer", opacity: 0.7, display: "flex" }}
+              style={{
+                cursor: "pointer",
+                color: "var(--ide-activity-dim)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                height: "38px",
+                borderLeft: "2px solid transparent",
+                transition: "color 0.15s ease",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--ide-activity-hover)")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--ide-activity-dim)")}
             >
-              <User size={18} />
+              <User size={19} />
             </div>
             <div
               title="Manage"
-              style={{ cursor: "pointer", opacity: 0.7, display: "flex" }}
+              style={{
+                cursor: "pointer",
+                color: "var(--ide-activity-dim)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                height: "38px",
+                borderLeft: "2px solid transparent",
+                transition: "color 0.15s ease",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--ide-activity-hover)")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--ide-activity-dim)")}
             >
-              <Settings size={18} />
+              <Settings size={19} />
             </div>
           </div>
         </div>

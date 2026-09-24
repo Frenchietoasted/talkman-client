@@ -82,9 +82,9 @@ export default function TalkmanLobby() {
     const targetCode = roomCode.trim().toLowerCase();
     const targetUsername = username.trim().toLowerCase();
     if (!targetCode || !targetUsername) return;
-    setCookie("username", targetUsername)
+    setCookie("username", targetUsername);
     setCookie("roomId", targetCode);
-    router.push(`/room/${encodeURIComponent(targetCode)}`);
+    router.push(`/room/${encodeURIComponent(targetCode)}?editor=${encodeURIComponent(editor)}&mode=${encodeURIComponent(mode)}`);
   };
 
   return (

@@ -4,7 +4,11 @@ import React, { useState, useEffect, useRef } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import { Message, Notif, Mode, Editor, IDEProps } from "@/lib/types";
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import VSCodeView from "./components/VSCodeView";
+import IntelliJView from "./components/IntelliJView";
+import EclipseView from "./components/EclipseView";
+import CodeBlocksView from "./components/CodeBlocksView";
 import { getAllMessages, getCookie } from "@/lib/chat-services";
 
 export default function RoomPage() {
@@ -110,13 +114,14 @@ export default function RoomPage() {
         const username = getCookie("username");
         const data = JSON.parse(event.data);
         setMessages((prev) => [...prev, data]);
-        if (data.sender != username) {
+        const textContent = data.text || data.message || "";
+        if (data.sender != username && textContent) {
           const trimmedMessage =
-            data.text.length > 35
-              ? data.text.substring(0, 35) + "..."
-              : data.text;
+            textContent.length > 35
+              ? textContent.substring(0, 35) + "..."
+              : textContent;
           const message = {
-            sender: data.sender,
+            sender: data.sender || "system",
             text: trimmedMessage,
           };
           notify(message);
@@ -228,9 +233,14 @@ export default function RoomPage() {
     <div
       className={`ide-root ide-${editor} ${isDark ? "theme-dark" : "theme-light"}`}
     >
-      {!loading && (
-        <div>
-          <VSCodeView {...ideProps} />
+        <div style={{ width: "100%", height: "100%" }}>
+          {editor === "codeblocks" && <CodeBlocksView {...ideProps} />}
+          {editor === "intellij" && <IntelliJView {...ideProps} />}
+          {editor === "eclipse" && <EclipseView {...ideProps} />}
+          {editor === "vscode" && <VSCodeView {...ideProps} />}
+          {!["codeblocks", "intellij", "eclipse", "vscode"].includes(editor) && (
+            <VSCodeView {...ideProps} />
+          )}
           <ToastContainer
             position="bottom-right"
             autoClose={2000}
@@ -244,7 +254,6 @@ export default function RoomPage() {
             theme="colored"
           />
         </div>
-      )}
     </div>
   );
 }

@@ -15,7 +15,7 @@ export interface Notif {
 }
 
 export type Mode = "light" | "dark";
-export type Editor = "vscode" | "eclipse" | "vim"
+export type Editor = "vscode" | "eclipse" | "intellij" | "codeblocks";
 
 export interface IDEProps {
   //webSocket: WebSocket;
