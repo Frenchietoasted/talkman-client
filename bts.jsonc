@@ -1,11 +1,3 @@
-// Better-T-Stack project metadata
-//
-// Keep this file to use the `add` command.
-// Add addons: bunx create-better-t-stack@latest add
-//
-// Docs: https://better-t-stack.dev/docs
-// Stack Builder: https://better-t-stack.dev/new
-
 {
   "$schema": "https://r2.better-t-stack.dev/schema.json",
   "version": "3.42.2",
@@ -15,8 +7,12 @@
   "orm": "drizzle",
   "backend": "express",
   "runtime": "bun",
-  "frontend": ["tanstack-router"],
-  "addons": ["turborepo"],
+  "frontend": [
+    "tanstack-router"
+  ],
+  "addons": [
+    "turborepo"
+  ],
   "examples": [],
   "auth": "clerk",
   "payments": "none",
