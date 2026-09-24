@@ -114,13 +114,14 @@ export default function RoomPage() {
         const username = getCookie("username");
         const data = JSON.parse(event.data);
         setMessages((prev) => [...prev, data]);
-        if (data.sender != username) {
+        const textContent = data.text || data.message || "";
+        if (data.sender != username && textContent) {
           const trimmedMessage =
-            data.text.length > 35
-              ? data.text.substring(0, 35) + "..."
-              : data.text;
+            textContent.length > 35
+              ? textContent.substring(0, 35) + "..."
+              : textContent;
           const message = {
-            sender: data.sender,
+            sender: data.sender || "system",
             text: trimmedMessage,
           };
           notify(message);
