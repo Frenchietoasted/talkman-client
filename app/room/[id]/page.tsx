@@ -4,7 +4,11 @@ import React, { useState, useEffect, useRef } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import { Message, Notif, Mode, Editor, IDEProps } from "@/lib/types";
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import VSCodeView from "./components/VSCodeView";
+import IntelliJView from "./components/IntelliJView";
+import EclipseView from "./components/EclipseView";
+import CodeBlocksView from "./components/CodeBlocksView";
 import { getAllMessages, getCookie } from "@/lib/chat-services";
 
 export default function RoomPage() {
@@ -228,9 +232,14 @@ export default function RoomPage() {
     <div
       className={`ide-root ide-${editor} ${isDark ? "theme-dark" : "theme-light"}`}
     >
-      {!loading && (
-        <div>
-          <VSCodeView {...ideProps} />
+        <div style={{ width: "100%", height: "100%" }}>
+          {editor === "codeblocks" && <CodeBlocksView {...ideProps} />}
+          {editor === "intellij" && <IntelliJView {...ideProps} />}
+          {editor === "eclipse" && <EclipseView {...ideProps} />}
+          {editor === "vscode" && <VSCodeView {...ideProps} />}
+          {!["codeblocks", "intellij", "eclipse", "vscode"].includes(editor) && (
+            <VSCodeView {...ideProps} />
+          )}
           <ToastContainer
             position="bottom-right"
             autoClose={2000}
@@ -244,7 +253,6 @@ export default function RoomPage() {
             theme="colored"
           />
         </div>
-      )}
     </div>
   );
 }

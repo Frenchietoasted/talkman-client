@@ -2,13 +2,13 @@
   "$schema": "https://r2.better-t-stack.dev/schema.json",
   "version": "3.42.2",
   "createdAt": "2026-09-03T04:34:38.138Z",
-  "reproducibleCommand": "bun create better-t-stack@latest talkman --frontend tanstack-router --backend express --runtime bun --database postgres --orm drizzle --api trpc --auth clerk --payments none --addons turborepo --examples none --db-setup supabase --web-deploy vercel --server-deploy vercel --git --package-manager bun --install",
+  "reproducibleCommand": "bun create better-t-stack@latest talkman --frontend next --backend express --runtime bun --database postgres --orm drizzle --api trpc --auth clerk --payments none --addons turborepo --examples none --db-setup supabase --web-deploy vercel --server-deploy vercel --git --package-manager bun --install",
   "database": "postgres",
   "orm": "drizzle",
   "backend": "express",
   "runtime": "bun",
   "frontend": [
-    "tanstack-router"
+    "next"
   ],
   "addons": [
     "turborepo"
